@@ -6,6 +6,7 @@ public class AIController : MonoBehaviour
 {
     public Transform[] patrolPoints;
     public Transform player;
+    HealthEnemy healthEnemy;
     public float chaseDistance = 5f;
 
     private NavMeshAgent agent;
@@ -15,6 +16,7 @@ public class AIController : MonoBehaviour
 
     void Start()
     {
+        healthEnemy = GetComponent<HealthEnemy>();
         agent = GetComponent<NavMeshAgent>();
         chosenPatrolPoints = new List<Transform>();
         ChooseClusteredPatrolPoints();
@@ -27,16 +29,15 @@ public class AIController : MonoBehaviour
         if (player!=null )
         {
             float distanceToPlayer = Vector3.Distance(player.position, transform.position);
-            if (distanceToPlayer <= chaseDistance)
+            if (distanceToPlayer <= chaseDistance||healthEnemy.registerHit==true)
             {
                 isChasing = true;
                 agent.destination = player.position;
             }
-            else
-            {
                 if (isChasing)
                 {
                     isChasing = false;
+                    healthEnemy.registerHit = false;
                     GoToNextPatrolPoint();
                 }
 
@@ -44,7 +45,6 @@ public class AIController : MonoBehaviour
                 {
                     GoToNextPatrolPoint();
                 }
-            }
         }
 
 

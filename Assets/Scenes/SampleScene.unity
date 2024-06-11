@@ -963,6 +963,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2037522332}
+    - target: {fileID: 3178931355970287084, guid: bcb03f10c909a154497cb9ab19ec14e4, type: 3}
+      propertyPath: startHealthMultiplier
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4562203647000048736, guid: bcb03f10c909a154497cb9ab19ec14e4, type: 3}
       propertyPath: player
       value: 

@@ -37,6 +37,8 @@ public class HealthEnemy : MonoBehaviour
     private GameObject playerCurrentProjectile;
     private Projectile projectileComponent;
 
+    public bool registerHit;
+
     private void Start()
     {
         InitializePlayerSettings();
@@ -59,6 +61,7 @@ public class HealthEnemy : MonoBehaviour
     {
         if (collision.collider.gameObject.tag=="Projectile")
         {
+            registerHit = true;
             SubtractHealth();
         }
     }
