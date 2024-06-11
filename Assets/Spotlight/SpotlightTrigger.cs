@@ -50,7 +50,6 @@ public class SpotlightTrigger : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(spotlight.transform.position, spotlight.range, entityLayer);
         foreach (Collider collider in colliders)
         {
-            if (collider.isTrigger) continue;
 
             Vector3 directionToCollider = (collider.transform.position - spotlight.transform.position).normalized;
             float angleToCollider = Vector3.Angle(spotlight.transform.forward, directionToCollider);
