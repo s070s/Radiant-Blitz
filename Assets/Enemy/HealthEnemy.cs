@@ -56,7 +56,6 @@ public class HealthEnemy : MonoBehaviour
         UpdateHealthUI();
         RotateHealthCanvas();
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject.tag=="Projectile")
