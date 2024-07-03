@@ -972,6 +972,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2037522332}
     - target: {fileID: 4562203647000048736, guid: bcb03f10c909a154497cb9ab19ec14e4, type: 3}
+      propertyPath: chaseDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4562203647000048736, guid: bcb03f10c909a154497cb9ab19ec14e4, type: 3}
       propertyPath: patrolPoints.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -1156,7 +1160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843282762200804593, guid: 3b8491493a5c77245a55d20bf2ad3e53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.7
+      value: -45.3
       objectReference: {fileID: 0}
     - target: {fileID: 5843282762200804593, guid: 3b8491493a5c77245a55d20bf2ad3e53, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1164,7 +1168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843282762200804593, guid: 3b8491493a5c77245a55d20bf2ad3e53, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.9
+      value: 46.7
       objectReference: {fileID: 0}
     - target: {fileID: 5843282762200804593, guid: 3b8491493a5c77245a55d20bf2ad3e53, type: 3}
       propertyPath: m_LocalRotation.w

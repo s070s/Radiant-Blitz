@@ -20,31 +20,48 @@ public class AIController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         chosenPatrolPoints = new List<Transform>();
         ChooseClusteredPatrolPoints();
+        Debug.Log(chosenPatrolPoints.Count);
         currentPatrolIndex = 0;
-        GoToNextPatrolPoint();
+        agent.destination = chosenPatrolPoints[0].position;
     }
 
     void Update()
     {
-        if (player!=null )
+        if (player != null)
         {
             float distanceToPlayer = Vector3.Distance(player.position, transform.position);
-            if (distanceToPlayer <= chaseDistance||healthEnemy.registerHit==true)
+            if (distanceToPlayer <= chaseDistance || healthEnemy.registerHit == true)
             {
                 isChasing = true;
-                agent.destination = player.position;
+
             }
-                if (isChasing)
+            if (isChasing)
+            {
+                agent.destination = player.position;
+                healthEnemy.registerHit = false;
+                if (!agent.pathPending && agent.remainingDistance > chaseDistance / 2)
                 {
                     isChasing = false;
-                    healthEnemy.registerHit = false;
-                    GoToNextPatrolPoint();
-                }
 
-                if (!agent.pathPending && agent.remainingDistance < 0.5f)
-                {
-                    GoToNextPatrolPoint();
                 }
+            }
+
+            if (agent.destination == chosenPatrolPoints[currentPatrolIndex].position)
+            {
+                Debug.Log("Previous:" + currentPatrolIndex + chosenPatrolPoints.Count);
+
+                if (currentPatrolIndex < chosenPatrolPoints.Count)
+                {
+                    currentPatrolIndex += 1;
+                }
+                else if(currentPatrolIndex ==chosenPatrolPoints.Count-1)
+                {
+                    currentPatrolIndex = 0;
+                }
+                MoveToPatrolPoint();
+            }
+
+
         }
 
 
@@ -78,13 +95,10 @@ public class AIController : MonoBehaviour
             chosenPatrolPoints.Add(remainingPoints[i]);
         }
     }
-
-    void GoToNextPatrolPoint()
+    void MoveToPatrolPoint()
     {
         if (chosenPatrolPoints.Count == 0)
             return;
-
         agent.destination = chosenPatrolPoints[currentPatrolIndex].position;
-        currentPatrolIndex = (currentPatrolIndex + 1) % chosenPatrolPoints.Count;
     }
 }
