@@ -33,7 +33,7 @@ public class SpotlightTrigger : MonoBehaviour
     /// <summary>
     /// Coroutine to periodically check for entities within the spotlight's range.
     /// </summary>
-    private IEnumerator CheckEntitiesInLightRoutine()
+    public IEnumerator CheckEntitiesInLightRoutine()
     {
         while (true)
         {
@@ -73,54 +73,36 @@ public class SpotlightTrigger : MonoBehaviour
     /// <param name="entity">The detected entity game object</param>
     private void TriggerScript(GameObject entity)
     {
-        HealthPlayer playerHealth = entity.GetComponent<HealthPlayer>();
-        HealthEnemy enemyHealth = entity.GetComponent<HealthEnemy>();
         ParticleSystem particleSystem = entity.GetComponent<ParticleSystem>();
-
         if (particleSystem != null)
         {
             particleSystem.Play();
         }
 
-        if (playerHealth != null)
+        if (entity.name=="Enemy")
         {
-            playerHealth.spotlightDamageMultiplier = 3;
+            HealthEnemy enemyHealth = entity.GetComponent<HealthEnemy>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.SpotlightDamageMultiplier = 3;
+            }
+            else
+            {
+                Debug.LogWarning("Entity does not have a HealthEnemy component");
+            }
         }
-        else if (enemyHealth != null)
+        else if (entity.name == "Player")
         {
-            enemyHealth.SpotlightDamageMultiplier = 3;
+            HealthPlayer playerHealth = entity.GetComponent<HealthPlayer>();
+            if (playerHealth != null)
+            {
+                playerHealth.spotlightDamageMultiplier = 3;
+            }
+            else
+            {
+                Debug.LogWarning("Entity does not have a HealthPlayer component");
+            }
         }
-        else
-        {
-            Debug.LogWarning("Entity does not have a HealthPlayer or HealthEnemy component");
-        }
-    }
-
-    /// <summary>
-    /// Sets the spotlight for the script.
-    /// </summary>
-    /// <param name="newSpotlight">New spotlight to be set</param>
-    public void SetSpotlight(Light newSpotlight)
-    {
-        spotlight = newSpotlight;
-        ValidateSpotlight();
-    }
-
-    /// <summary>
-    /// Sets the layer mask for detecting entities.
-    /// </summary>
-    /// <param name="newEntityLayer">New entity layer mask</param>
-    public void SetEntityLayer(LayerMask newEntityLayer)
-    {
-        entityLayer = newEntityLayer;
-    }
-
-    /// <summary>
-    /// Sets the interval between entity checks.
-    /// </summary>
-    /// <param name="newCheckInterval">New check interval in seconds</param>
-    public void SetCheckInterval(float newCheckInterval)
-    {
-        checkInterval = newCheckInterval;
+        
     }
 }

@@ -36,7 +36,7 @@ public class HealthEnemy : MonoBehaviour
     private Shooting playerShootingScript;
     private GameObject playerCurrentProjectile;
     private Projectile projectileComponent;
-
+    [HideInInspector]
     public bool registerHit;
 
     private void Start()

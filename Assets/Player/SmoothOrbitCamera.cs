@@ -7,7 +7,7 @@ public class SmoothOrbitCamera : MonoBehaviour
     [Tooltip("The focus point the camera will orbit around")]
     public Transform focus;
     [Tooltip("The distance of the camera from the focus point")]
-    public float distance = 5.0f;
+    public float distance = 6;
     [Tooltip("Clamp for the pitch rotation")]
     public Vector2 pitchClamp = new Vector2(-30f, 60f);
 

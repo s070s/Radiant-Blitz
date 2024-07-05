@@ -4,67 +4,53 @@ using System.Collections.Generic;
 
 public class AIController : MonoBehaviour
 {
-    public Transform[] patrolPoints;
-    public Transform player;
-    HealthEnemy healthEnemy;
-    public float chaseDistance = 5f;
+    public Transform[] patrolPoints; // Array of patrol points
+    public Transform player; // Reference to the player
+    HealthEnemy healthEnemy; // Reference to the enemy's health script
+    public float chaseDistance = 5f; // Distance within which the enemy starts chasing the player
 
-    private NavMeshAgent agent;
-    private List<Transform> chosenPatrolPoints;
-    private int currentPatrolIndex;
-    private bool isChasing;
+    private NavMeshAgent agent; // NavMeshAgent component for pathfinding
+    private List<Transform> chosenPatrolPoints; // List of patrol points to be followed
+    private int currentPatrolIndex; // Index of the current patrol point
+    private bool isChasing; // Flag to indicate if the enemy is chasing the player
+    private float waitTime = 1.5f; // Time to wait at each patrol point
+    private float waitTimer = 0f; // Timer to track waiting time
 
     void Start()
     {
-        healthEnemy = GetComponent<HealthEnemy>();
-        agent = GetComponent<NavMeshAgent>();
-        chosenPatrolPoints = new List<Transform>();
-        ChooseClusteredPatrolPoints();
-        Debug.Log(chosenPatrolPoints.Count);
-        currentPatrolIndex = 0;
-        agent.destination = chosenPatrolPoints[0].position;
+        healthEnemy = GetComponent<HealthEnemy>(); // Get the HealthEnemy component
+        agent = GetComponent<NavMeshAgent>(); // Get the NavMeshAgent component
+        chosenPatrolPoints = new List<Transform>(); // Initialize the list of chosen patrol points
+        ChooseClusteredPatrolPoints(); // Select the patrol points
+        Debug.Log(chosenPatrolPoints.Count); // Debug the count of chosen patrol points
+        currentPatrolIndex = 0; // Start with the first patrol point
+        agent.destination = chosenPatrolPoints[0].position; // Set the destination to the first patrol point
     }
 
     void Update()
     {
-        if (player != null)
+        if (player != null) // Ensure the player is not null
         {
-            float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+            float distanceToPlayer = Vector3.Distance(player.position, transform.position); // Calculate the distance to the player
             if (distanceToPlayer <= chaseDistance || healthEnemy.registerHit == true)
             {
-                isChasing = true;
-
+                isChasing = true; // Start chasing if within distance or hit registered
             }
+
             if (isChasing)
             {
-                agent.destination = player.position;
-                healthEnemy.registerHit = false;
-                if (!agent.pathPending && agent.remainingDistance > chaseDistance / 2)
+                agent.destination = player.position; // Set the destination to the player
+                healthEnemy.registerHit = false; // Reset the hit register
+                if (!agent.pathPending && agent.remainingDistance <= chaseDistance / 2)
                 {
-                    isChasing = false;
-
+                    isChasing = false; // Stop chasing if close enough to the player
                 }
             }
-
-            if (agent.destination == chosenPatrolPoints[currentPatrolIndex].position)
+            else
             {
-                Debug.Log("Previous:" + currentPatrolIndex + chosenPatrolPoints.Count);
-
-                if (currentPatrolIndex < chosenPatrolPoints.Count)
-                {
-                    currentPatrolIndex += 1;
-                }
-                else if(currentPatrolIndex ==chosenPatrolPoints.Count-1)
-                {
-                    currentPatrolIndex = 0;
-                }
-                MoveToPatrolPoint();
+                WaitAtPatrolPoint();
             }
-
-
         }
-
-
     }
 
     void ChooseClusteredPatrolPoints()
@@ -95,10 +81,27 @@ public class AIController : MonoBehaviour
             chosenPatrolPoints.Add(remainingPoints[i]);
         }
     }
+
     void MoveToPatrolPoint()
     {
         if (chosenPatrolPoints.Count == 0)
             return;
-        agent.destination = chosenPatrolPoints[currentPatrolIndex].position;
+        agent.destination = chosenPatrolPoints[currentPatrolIndex].position; // Set the destination to the current patrol point
+    }
+
+    void WaitAtPatrolPoint()
+    {
+        // Check if the agent has reached its destination and is not currently chasing
+        if (!isChasing && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            waitTimer += Time.deltaTime; // Increment the timer by the elapsed time
+
+            if (waitTimer >= waitTime) // Check if the wait time has elapsed
+            {
+                currentPatrolIndex = (currentPatrolIndex + 1) % chosenPatrolPoints.Count; // Move to the next patrol point
+                MoveToPatrolPoint(); // Set the destination to the next patrol point
+                waitTimer = 0f; // Reset the timer
+            }
+        }
     }
 }

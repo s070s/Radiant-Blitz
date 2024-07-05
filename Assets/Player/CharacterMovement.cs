@@ -4,8 +4,8 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float walkSpeed = 5.0f;
-    public float runSpeed = 10.0f;
+    public float walkSpeed = 6f;
+    public float runSpeed = 12f;
     public float jumpHeight = 2.0f;
     public float gravity = 9.81f;
     public float rotationSpeed = 0.2f;
