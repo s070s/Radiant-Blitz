@@ -7,11 +7,9 @@ public class HealthPlayer : MonoBehaviour
 {
     [Header("Multiplier Settings")]
     [SerializeField, Range(1, 5)]
-    private int startDamageMultiplier = 1;
+    private int DamageTakenMultiplier = 1;
     [SerializeField, Range(1, 5)]
     private int startHealthMultiplier = 1;
-    [Range(1, 10)]
-    public int spotlightDamageMultiplier = 1;
 
     [Header("Health Settings")]
     [SerializeField]
@@ -28,7 +26,8 @@ public class HealthPlayer : MonoBehaviour
     private Transform healthCanvas;
 
     private int health;
-    private int damageTaken;
+    [HideInInspector]
+    public int ActualPlayerDamage;
     private Color healthColorOpaque = Color.white;
 
     private void Start()
@@ -39,6 +38,7 @@ public class HealthPlayer : MonoBehaviour
 
     private void Update()
     {
+        ActualPlayerDamage = baseDamageTaken * DamageTakenMultiplier;
         CheckHealth();
         UpdateHealthUI();
     }
@@ -58,8 +58,6 @@ public class HealthPlayer : MonoBehaviour
     private void InitializeHealthSettings()
     {
         health = baseHealth * startHealthMultiplier;
-        damageTaken = baseDamageTaken * startDamageMultiplier;
-        spotlightDamageMultiplier = 1;
 
         if (this.name == "Player")
         {
@@ -91,7 +89,7 @@ public class HealthPlayer : MonoBehaviour
     /// </summary>
     private void SubtractHealth()
     {
-        health -= damageTaken * spotlightDamageMultiplier;
+        health -= ActualPlayerDamage;
     }
 
     /// <summary>

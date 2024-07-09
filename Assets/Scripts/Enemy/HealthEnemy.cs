@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class HealthEnemy : MonoBehaviour
 {
     [Header("Multiplier Settings")]
     [SerializeField, Range(1, 5)]
-    private int startDamageMultiplier = 1;
-    [SerializeField, Range(1, 5)]
-    private int startHealthMultiplier = 1;
-    [Range(1, 10)]
-    public int SpotlightDamageMultiplier = 1;
+    private int HealthMultiplier = 1;
 
     [Header("Health Settings")]
     [SerializeField]
@@ -31,24 +28,28 @@ public class HealthEnemy : MonoBehaviour
     [SerializeField]
     private Transform player;
 
-    private int health;
-    private int damageTaken;
+    private int ActualHealth;
+    [HideInInspector]
+    public int ActualEnemyDamage;
     private Shooting playerShootingScript;
-    private GameObject playerCurrentProjectile;
-    private Projectile projectileComponent;
     [HideInInspector]
     public bool registerHit;
+    [SerializeField]
+    ParticleSystem EnemyParticles;
 
     private void Start()
     {
+        ActualEnemyDamage = 1;
         InitializePlayerSettings();
         InitializeHealthSettings();
-        UpdateHealthUI();
     }
 
     private void Update()
     {
-        if (health <= 0)
+        if (EnemyParticles.isStopped) { ActualEnemyDamage = 1; }
+        else if(EnemyParticles.isPlaying) { ActualEnemyDamage = 10; }
+        else { return;}
+        if (ActualHealth <= 0)
         {
             Die();
         }
@@ -56,9 +57,10 @@ public class HealthEnemy : MonoBehaviour
         UpdateHealthUI();
         RotateHealthCanvas();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.tag=="Projectile")
+        if (collision.collider.gameObject.tag == "Projectile" && !registerHit)
         {
             registerHit = true;
             SubtractHealth();
@@ -71,10 +73,6 @@ public class HealthEnemy : MonoBehaviour
     private void InitializePlayerSettings()
     {
         playerShootingScript = player.GetComponent<Shooting>();
-        int projectileIndex = playerShootingScript.projectilePrefabChosenIndex;
-        playerCurrentProjectile = playerShootingScript.projectilePrefabs[projectileIndex];
-        projectileComponent = playerCurrentProjectile.GetComponent<Projectile>();
-        damageTaken = projectileComponent.damage * startDamageMultiplier;
     }
 
     /// <summary>
@@ -82,8 +80,7 @@ public class HealthEnemy : MonoBehaviour
     /// </summary>
     private void InitializeHealthSettings()
     {
-        health = baseHealth * startHealthMultiplier;
-        SpotlightDamageMultiplier = 1;
+        ActualHealth = baseHealth * HealthMultiplier;
         healthTextProComp.color = healthColorOpaque;
     }
 
@@ -92,7 +89,7 @@ public class HealthEnemy : MonoBehaviour
     /// </summary>
     private void UpdateHealthUI()
     {
-        healthTextProComp.text = health.ToString();
+        healthTextProComp.text = ActualHealth.ToString();
     }
 
     /// <summary>
@@ -108,7 +105,8 @@ public class HealthEnemy : MonoBehaviour
     /// </summary>
     private void SubtractHealth()
     {
-        health -= damageTaken * SpotlightDamageMultiplier;
+        ActualHealth -= ActualEnemyDamage;
+        registerHit = false;
     }
 
     /// <summary>

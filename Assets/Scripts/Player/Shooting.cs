@@ -5,23 +5,24 @@ public class Shooting : MonoBehaviour
 {
     [Header("Shooting Settings")]
     [Tooltip("The anchor point from where projectiles are fired")]
-    [SerializeField]
-    private GameObject anchor;
+    public GameObject anchor;
     [Tooltip("Index to choose the projectile prefab")]
-    [SerializeField, Range(0, 1)]
+    [Range(0, 1)]
     public int projectilePrefabChosenIndex;
     [Tooltip("Array of projectile prefabs")]
-    [SerializeField]
     public GameObject[] projectilePrefabs;
 
     [Tooltip("Reference to the SmoothOrbitCamera script")]
     [SerializeField]
     private SmoothOrbitCamera orbitCamera; // Add this reference
-
-    private Projectile[] projectiles;
-    private GameObject selectedProjectileGameObject;
-    private Projectile selectedProjectile;
-    private int projectileCount;
+    [HideInInspector]
+    public Projectile[] projectiles;
+    [HideInInspector]
+    public GameObject selectedProjectileGameObject;
+    [HideInInspector]
+    public Projectile selectedProjectile;
+    [HideInInspector]
+    public int projectileCount;
     private Vector3[] positions;
 
     private void Awake()
@@ -37,7 +38,6 @@ public class Shooting : MonoBehaviour
     private void Update()
     {
         HandleInput();
-        UpdateSelectedProjectile();
         UpdateAnchorRotation(); // Update the anchor rotation
     }
 

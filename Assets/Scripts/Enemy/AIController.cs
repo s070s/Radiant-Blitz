@@ -22,34 +22,33 @@ public class AIController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>(); // Get the NavMeshAgent component
         chosenPatrolPoints = new List<Transform>(); // Initialize the list of chosen patrol points
         ChooseClusteredPatrolPoints(); // Select the patrol points
-        Debug.Log(chosenPatrolPoints.Count); // Debug the count of chosen patrol points
         currentPatrolIndex = 0; // Start with the first patrol point
         agent.destination = chosenPatrolPoints[0].position; // Set the destination to the first patrol point
     }
 
     void Update()
     {
-        if (player != null) // Ensure the player is not null
-        {
-            float distanceToPlayer = Vector3.Distance(player.position, transform.position); // Calculate the distance to the player
-            if (distanceToPlayer <= chaseDistance || healthEnemy.registerHit == true)
-            {
-                isChasing = true; // Start chasing if within distance or hit registered
-            }
+        if (player == null) return;
 
-            if (isChasing)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= chaseDistance || healthEnemy.registerHit)
+        {
+            isChasing = true;
+        }
+
+        if (isChasing)
+        {
+            agent.destination = player.position;
+
+            if (!agent.pathPending && agent.remainingDistance <= chaseDistance / 2)
             {
-                agent.destination = player.position; // Set the destination to the player
-                healthEnemy.registerHit = false; // Reset the hit register
-                if (!agent.pathPending && agent.remainingDistance <= chaseDistance / 2)
-                {
-                    isChasing = false; // Stop chasing if close enough to the player
-                }
+                isChasing = false;
             }
-            else
-            {
-                WaitAtPatrolPoint();
-            }
+        }
+        else
+        {
+            WaitAtPatrolPoint();
         }
     }
 

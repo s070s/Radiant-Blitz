@@ -50,40 +50,4 @@ public class Projectile : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
     }
-
-    /// <summary>
-    /// Sets the damage value for the projectile.
-    /// </summary>
-    /// <param name="newDamage">New damage value to be set.</param>
-    public void SetDamage(int newDamage)
-    {
-        damage = newDamage;
-    }
-
-    /// <summary>
-    /// Sets the speed value for the projectile.
-    /// </summary>
-    /// <param name="newSpeed">New speed value to be set.</param>
-    public void SetSpeed(float newSpeed)
-    {
-        speed = newSpeed;
-    }
-
-    /// <summary>
-    /// Sets the lifetime value for the projectile.
-    /// </summary>
-    /// <param name="newLifetime">New lifetime value to be set.</param>
-    public void SetLifetime(float newLifetime)
-    {
-        lifeTime = newLifetime;
-    }
-
-    /// <summary>
-    /// Sets the projectile count value.
-    /// </summary>
-    /// <param name="newCount">New projectile count to be set.</param>
-    public void SetProjectileCount(int newCount)
-    {
-        projectileCount = Mathf.Clamp(newCount, 1, 3);
-    }
 }
