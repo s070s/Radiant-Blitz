@@ -28,6 +28,7 @@ public class Shooting : MonoBehaviour
     private void Awake()
     {
         InitializeProjectiles();
+        LockCursor();
     }
 
     private void Start()
@@ -76,25 +77,31 @@ public class Shooting : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Input.GetButtonDown("Fire1")) // Assuming "Fire1" is set up in the Input Manager
+        Shoot();
+        // Toggle cursor lock state when Escape key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Shoot();
+            UnlockCursor();
         }
     }
 
     private void Shoot()
     {
-        if (projectileCount == 1)
+        if (Input.GetButtonDown("Fire1")) // Assuming "Fire1" is set up in the Input Manager
         {
-            InstantiateProjectile(anchor.transform.position);
-        }
-        else if (projectileCount > 1)
-        {
-            for (int i = 0; i < projectileCount; i++)
+            LockCursor();
+            if (projectileCount == 1)
             {
-                Vector3 startPos = anchor.transform.position - anchor.transform.right;
-                positions[i] = startPos + anchor.transform.right * i;
-                InstantiateProjectile(positions[i]);
+                InstantiateProjectile(anchor.transform.position);
+            }
+            else if (projectileCount > 1)
+            {
+                for (int i = 0; i < projectileCount; i++)
+                {
+                    Vector3 startPos = anchor.transform.position - anchor.transform.right;
+                    positions[i] = startPos + anchor.transform.right * i;
+                    InstantiateProjectile(positions[i]);
+                }
             }
         }
     }
@@ -103,5 +110,17 @@ public class Shooting : MonoBehaviour
     {
         GameObject instance = Instantiate(selectedProjectileGameObject, position, Quaternion.identity);
         instance.transform.forward = anchor.transform.forward;
+    }
+
+    void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

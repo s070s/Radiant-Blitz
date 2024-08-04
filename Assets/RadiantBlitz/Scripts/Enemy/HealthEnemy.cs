@@ -34,8 +34,6 @@ public class HealthEnemy : MonoBehaviour
     private Shooting playerShootingScript;
     [HideInInspector]
     public bool registerHit;
-    [SerializeField]
-    ParticleSystem EnemyParticles;
 
     private void Start()
     {
@@ -46,9 +44,6 @@ public class HealthEnemy : MonoBehaviour
 
     private void Update()
     {
-        if (EnemyParticles.isStopped) { ActualEnemyDamage = 1; }
-        else if(EnemyParticles.isPlaying) { ActualEnemyDamage = 10; }
-        else { return;}
         if (ActualHealth <= 0)
         {
             Die();
